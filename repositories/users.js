@@ -1,3 +1,4 @@
+const { create } = require('domain');
 const fs = require('fs')
 
 class UsersRepository {
@@ -14,6 +15,26 @@ class UsersRepository {
     }
 
   }
+
+  async getAll() {
+    return JSON.parse(await fs.promises.readFile(this.filename, {
+      encoding: 'utf8'
+    }));
+  }
+
+  async create(attrs) {
+    const records = await this.getAll();
+    records.push(attrs);    
+  }
+};
+
+
+const test = async () => {
+  const repo = new UsersRepository('users.json');
+
+  const users = await repo.getAll();
+
+  console.log(users);
 }
 
-const repo = new UsersRepository('users.json');
+test();
