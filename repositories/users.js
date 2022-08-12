@@ -29,7 +29,7 @@ class UsersRepository {
     attrs.id = this.randomId();
 
     const salt = crypto.randomBytes(8).toString('hex');
-    const buf = await crypto.scrypt(attrs.password, salt, 64);
+    const buf = await scrypt(attrs.password, salt, 64);
 
     const records = await this.getAll();
     const record = {
