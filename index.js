@@ -5,10 +5,10 @@ const usersRepo = require('./repositories/users');
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extende: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cookieSession({
-    keys: ['iurvndmadgonvir3r12']
+    keys: ['lkasld235j']
   })
 );
 
@@ -38,11 +38,13 @@ app.post('/signup', async (req, res) => {
     return res.send('Passwords must match');
   }
 
+  // Create a user in our user repo to represent this person
   const user = await usersRepo.create({ email, password });
 
+  // Store the id of that user inside the users cookie
   req.session.userId = user.id;
 
-  res.send('Account created!!!')
+  res.send('Account created!!!');
 });
 
 app.get('/signout', (req, res) => {
@@ -77,8 +79,7 @@ app.post('/signin', async (req, res) => {
 
   req.session.userId = user.id;
 
-  res.send("You are signed in!!!");
-
+  res.send('You are signed in!!!');
 });
 
 app.listen(3000, () => {
