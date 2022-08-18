@@ -63,15 +63,6 @@ router.post('/signin',
 
     const user = await usersRepo.getOneBy({ email });
 
-    const validPassword = await usersRepo.comparePasswords(
-      user.password,
-      password
-    );
-
-    if (!validPassword) {
-      return res.send('Invalid password');
-    }
-
     req.session.userId = user.id;
 
     res.send('You are signed in!!!');
