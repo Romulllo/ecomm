@@ -3,7 +3,7 @@ const { check, validationResult } = require('express-validator');
 
 const usersRepo = require('../../repositories/users');
 const signupTemplate = require('../../views/admin/auth/signup');
-const siginTemplate = require('../../views/admin/auth/sigin');
+const signinTemplate = require('../../views/admin/auth/signin');
 const { 
   requireEmail, 
   requirePassword, 
@@ -44,7 +44,7 @@ router.get('/signout', (req, res) => {
 });
 
 router.get('/signin', (req, res) => {
-  res.send(siginTemplate());
+  res.send(signinTemplate({}));
 });
 
 router.post('/signin', 
@@ -54,7 +54,10 @@ router.post('/signin',
   ],
   async (req, res) => {
     const errors = validationResult(req);
-    console.log(errors);
+
+    if (!errors.isEmpty()) {
+      return res.send(signinTemplate({ errors }));
+    }
 
     const { email } = req.body;
 
