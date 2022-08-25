@@ -1,5 +1,5 @@
 const { check } = require('express-validator');
-const userRepo = require('../../repositories/users');
+const usersRepo = require('../../repositories/users');
 
 module.exports = {
   requireTitle: check('title')
@@ -30,8 +30,8 @@ module.exports = {
     .trim()
     .isLength({ min: 4, max: 20 })
     .withMessage('Must be between 4 and 20 characters')
-    .custom((passwordConfirmation, { req }) => {
-      if (passwordConfirmation != req.body.password) {
+    .custom(async (passwordConfirmation, { req }) => {
+      if (passwordConfirmation !== req.body.password) {
         throw new Error('Passwords must match');
       }
     }),
@@ -41,7 +41,7 @@ module.exports = {
     .isEmail()
     .withMessage('Must provide a valid email')
     .custom(async email => {
-      const user = await userRepo.getOneBy({ email });
+      const user = await usersRepo.getOneBy({ email });
       if (!user) {
         throw new Error('Email not found!');
       }
@@ -54,12 +54,12 @@ module.exports = {
         throw new Error('Invalid password');
       }
 
-      const validPassword = await userRepo.comparePasswords(
+      const validPassword = await usersRepo.comparePasswords(
         user.password,
         password
       );
       if (!validPassword) {
-        throw new Error('Invalid password')
+        throw new Error('Invalid password');
       }
     })
 };
